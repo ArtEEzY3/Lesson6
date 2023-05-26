@@ -8,17 +8,11 @@ public class Employee {
     @PrimaryKey(autoGenerate = true)
     public long id;
     public String name;
-    public int salary;
+    public String superpower;
+    public String nemesis;
 
-    public long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getSalary() {
-        return String.valueOf(salary);
-    }
+    public long getId() {return id;}
+    public String getName() {return name;}
+    public String getSuperpower() {return superpower;}
+    public String getNemesis(){return nemesis;}
 }

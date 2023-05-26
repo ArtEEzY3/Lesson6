@@ -24,6 +24,33 @@ public class MainActivity extends AppCompatActivity {
 
         AppDatabase db = App.getInstance().getDatabase();
         EmployeeDao employeeDao = db.employeeDao();
+
+        binding.updBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (binding.idEditText.getText().length() != 0) {
+                    if (binding.nameEdit.getText().length() != 0 &
+                            binding.superEdit.getText().length() != 0 & binding.nemesisEdit.getText().length() != 0) {
+                        try {
+                            Employee employee = new Employee();
+                            employee.id = Long.parseLong(String.valueOf(binding.idEditText.getText()));
+                            employee.name = String.valueOf(binding.nameEdit.getText());
+                            employee.superpower = String.valueOf(binding.superEdit.getText());
+                            employee.nemesis = String.valueOf(binding.nemesisEdit.getText());
+                            employeeDao.update(employee);
+                        }
+                        catch (SQLiteConstraintException e) { //shouldnt work
+                            Toast.makeText(getApplicationContext(), "id уже используется", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(getApplicationContext(), "All fields must be filled", Toast.LENGTH_SHORT).show();
+                    }
+                } else{
+                    Toast.makeText(getApplicationContext(), "Set id for update", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         binding.findBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -31,28 +58,29 @@ public class MainActivity extends AppCompatActivity {
                     Employee employee;
                     employee = employeeDao.getById(Long.parseLong(String.valueOf(binding.idEditText.getText())));
                     binding.nameEdit.setText(employee.getName());
-                    binding.salaryEdit.setText(employee.getSalary());
-                } else {
-                    Toast.makeText(getApplicationContext(), "Введите id", Toast.LENGTH_SHORT).show();
+                    binding.superEdit.setText(employee.getSuperpower());
+                    binding.nemesisEdit.setText(employee.getNemesis());
                 }
             }
         });
         binding.saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (binding.idEditText.getText().length() != 0 & binding.nameEdit.getText().length() != 0 & binding.salaryEdit.getText().length() != 0) {
+                if (binding.idEditText.getText().length() != 0 & binding.nameEdit.getText().length() != 0 &
+                        binding.superEdit.getText().length() != 0 & binding.nemesisEdit.getText().length() != 0) {
                     try {
                         Employee employee = new Employee();
                         employee.id = Long.parseLong(String.valueOf(binding.idEditText.getText()));
                         employee.name = String.valueOf(binding.nameEdit.getText());
-                        employee.salary = Integer.parseInt(String.valueOf(binding.salaryEdit.getText()));
+                        employee.superpower = String.valueOf(binding.superEdit.getText());
+                        employee.nemesis = String.valueOf(binding.nemesisEdit.getText());
                         employeeDao.insert(employee);
                     }
                     catch (SQLiteConstraintException e) {
-                        Toast.makeText(getApplicationContext(), "id уже используется", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "id already in use", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(getApplicationContext(), "Вы не заполнили все поля", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "All fields must be filled", Toast.LENGTH_SHORT).show();
                 }
             }
         });
